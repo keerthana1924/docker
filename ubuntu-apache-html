@@ -1,0 +1,41 @@
+# Use the official Ubuntu base image
+FROM ubuntu:20.04
+
+# Set the DEBIAN_FRONTEND environment variable to noninteractive to avoid interactive prompts
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Update package list and install Apache HTTP server
+RUN apt-get update -y && \
+    apt-get install -y apache2
+
+# Set up the working directory for Apache's document root
+WORKDIR /var/www/html
+
+# Create the index.html file with the provided HTML content
+RUN echo '<html>\
+<head>\
+    <title>Welcome to My Docker Apache Server</title>\
+    <style>\
+        /* Center the paragraph */\
+        .center-paragraph {\
+            text-align: center;\
+        }\
+        /* Increase the size and letter spacing of the heading */\
+        h1 {\
+            font-size: 48px; /* Increase font size */\
+            letter-spacing: 5px; /* Increase letter spacing */\
+        }\
+    </style>\
+</head>\
+<body>\
+    <h1 style="color: blue; text-align: center;">Welcome to My Dockerized Apache Web Server</h1>\
+    <p class="center-paragraph" style="font-size: 20px; background-color: red; padding: 10px;">HAPPY CHRISTMAS MERRY CHRISTMAS TO YOU MY BUDDY.</p>\
+    <p class="center-paragraph" style="font-size: 18px; background-color: lightgreen; padding: 10px;">Enjoy your day with lots of fun and may your holidays continue with joy! Stay active and don't miss out on classes, as we can take more holidays for the New Year and chill together. Until then, let's make the most of the time!</p>\
+</body>\
+</html>' > index.html
+
+# Expose the default HTTP port
+EXPOSE 80
+
+# Start Apache HTTP server in the foreground (without systemd)
+CMD ["/usr/sbin/apache2ctl", "-D", "FOREGROUND"]
